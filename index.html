@@ -29,7 +29,7 @@
             color: var(--wood-dark);
             overflow: hidden;
             height: 100vh;
-            width: 100vw; /* 確保寬度佔滿 */
+            width: 100vw;
             margin: 0;
         }
 
@@ -76,7 +76,6 @@
             transition: transform 0.2s;
             position: relative;
             overflow: hidden;
-            /* 移除舊版可能的固定高度，確保彈性 */
         }
         .card-panel:hover {
             transform: translateY(-5px);
@@ -97,16 +96,15 @@
 
         /* === 故事劇場佈局 === */
         
-        /* 1. 全螢幕閱讀區 - 針對 1080p 優化 */
         .full-text-area {
             position: absolute;
-            top: 80px; /* 導覽列高度 */
+            top: 80px;
             left: 0;
             right: 0;
             bottom: 0;
             background-color: #fffbf0;
             padding: 40px;
-            padding-bottom: 300px; /* 預留底部空間給對話框 */
+            padding-bottom: 300px;
             overflow-y: auto;
             z-index: 1;
             scrollbar-width: thin;
@@ -114,7 +112,7 @@
         }
 
         .text-content {
-            max-width: 1400px; /* 加寬閱讀區塊 */
+            max-width: 1400px;
             margin: 0 auto;
             background: white;
             padding: 50px;
@@ -124,13 +122,12 @@
             position: relative;
         }
 
-        /* 2. 底部互動層 */
         .interaction-layer {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 280px; /* 稍微增高以容納更大的頭像 */
+            height: 280px;
             z-index: 10;
             pointer-events: none;
             display: flex;
@@ -141,7 +138,7 @@
 
         /* === 圓形頭像樣式 === */
         .avatar-frame {
-            width: 180px; /* 加大頭像 */
+            width: 180px;
             height: 180px;
             border-radius: 50%;
             border: 6px solid #d4af37;
@@ -154,7 +151,8 @@
             position: relative;
             z-index: 30;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
+            /* 移除點擊手勢 */
+            cursor: default;
         }
 
         .avatar-frame.speaking {
@@ -178,7 +176,6 @@
             object-position: top center;
         }
 
-        /* 角色位置 */
         .char-container {
             position: absolute;
             bottom: 50px; 
@@ -203,9 +200,8 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* 對話框 - 配合 1920 寬度 */
         .dialogue-box {
-            width: 60%; /* 加寬 */
+            width: 60%;
             min-width: 800px;
             background: rgba(255, 255, 255, 0.95);
             border: 5px solid #3e2723;
@@ -221,34 +217,17 @@
             justify-content: center;
             min-height: 160px;
         }
-        
-        .img-upload-hint {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-size: 0.9rem;
-            opacity: 0;
-            transition: opacity 0.2s;
-            cursor: pointer;
-        }
-        .avatar-frame:hover .img-upload-hint { opacity: 1; }
 
         .typewriter::after { content: '|'; animation: blink 1s step-start infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* === 練習題卡片 (全高修正) === */
         .practice-card {
             background-color: white;
             border: 4px solid #8d6e63;
             border-radius: 16px;
             padding: 2rem;
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-            height: 100%; /* 關鍵：填滿父容器高度 */
+            height: 100%;
             display: flex;
             flex-direction: column;
             transition: transform 0.2s;
@@ -378,20 +357,10 @@
             const [answers, setAnswers] = useState({});
             const [showRef, setShowRef] = useState({});
 
-            // 圖片路徑
-            const [imgGuan, setImgGuan] = useState("./Gemini_Generated_Image_9hndxl9hndxl9hnd.jpg");
-            const [imgBao, setImgBao] = useState("./Gemini_Generated_Image_9hndxl9hndxl9hnd%20(1).jpg");
-            
-            const guanInputRef = useRef(null);
-            const baoInputRef = useRef(null);
-
-            const handleImageUpload = (e, setImg) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const url = URL.createObjectURL(file);
-                    setImg(url);
-                }
-            };
+            // 直接指定圖片路徑 (已處理特殊字元)
+            const imgGuan = "./guan.jpg";
+            // 對於含有空格和括號的檔名，使用 encodeURIComponent 確保安全，或是直接對空格使用 %20
+            const imgBao = "./boo.jpg";
 
             useEffect(() => {
                 let timer;
@@ -431,7 +400,6 @@
                 <div className="flex flex-col items-center justify-center h-[calc(100vh-96px)] fade-in">
                     <h1 className="text-9xl font-art text-amber-900 mb-10 drop-shadow-xl tracking-widest text-stroke">管鮑之交</h1>
                     <div className="p-4 bg-black rounded-2xl border-8 border-[#5d4037] shadow-2xl relative">
-                         {/* 裝飾釘子 */}
                          <div className="absolute top-3 left-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
                          <div className="absolute top-3 right-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
                          <div className="absolute bottom-3 left-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
@@ -485,9 +453,6 @@
                 return (
                     <div className="story-container fade-in relative h-[calc(100vh-96px)]">
                         
-                        <input type="file" ref={guanInputRef} onChange={(e) => handleImageUpload(e, setImgGuan)} className="hidden" accept="image/*" />
-                        <input type="file" ref={baoInputRef} onChange={(e) => handleImageUpload(e, setImgBao)} className="hidden" accept="image/*" />
-
                         {/* 1. 課文卷軸閱讀區 */}
                         <div className="full-text-area">
                             <div className="text-content">
@@ -509,18 +474,13 @@
                             
                             {/* 左側角色: 管仲 */}
                             <div className="char-container char-left">
-                                <div 
-                                    className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}
-                                    onClick={() => guanInputRef.current.click()}
-                                    title="點擊更換圖片"
-                                >
+                                <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
                                     <img 
                                         src={imgGuan} 
                                         className="avatar-img"
                                         alt="管仲" 
-                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=GuanZhong"; }} 
+                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=圖片讀取失敗"; }} 
                                     />
-                                    <div className="img-upload-hint">更換<br/>圖片</div>
                                 </div>
                                 <div className="name-badge">管仲</div>
                             </div>
@@ -537,18 +497,13 @@
 
                             {/* 右側角色: 鮑叔牙 */}
                             <div className="char-container char-right">
-                                <div 
-                                    className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}
-                                    onClick={() => baoInputRef.current.click()}
-                                    title="點擊更換圖片"
-                                >
+                                <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
                                     <img 
                                         src={imgBao} 
                                         className="avatar-img"
                                         alt="鮑叔牙" 
-                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=BaoShuya"; }} 
+                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=圖片讀取失敗"; }} 
                                     />
-                                    <div className="img-upload-hint">更換<br/>圖片</div>
                                 </div>
                                 <div className="name-badge">鮑叔牙</div>
                             </div>
@@ -586,8 +541,6 @@
                 const task = PRACTICE_TASKS.find(t => t.id === selectedTask);
 
                 return (
-                    // 這裡改為使用 calc(100vh - 導覽列高度) 確保填滿垂直空間
-                    // w-[95%] 讓它更寬，適合 1920 解析度
                     <div className="h-[calc(100vh-96px)] p-8 fade-in flex flex-col w-[95%] mx-auto">
                         <div className="flex justify-between items-center mb-6 flex-shrink-0">
                             <h2 className="text-5xl font-bold text-amber-900 border-l-8 border-amber-800 pl-6">{task.title}</h2>
@@ -599,10 +552,8 @@
                             </button>
                         </div>
 
-                        {/* 三題並列，h-full + pb-6 確保佔滿剩餘高度 */}
                         <div className="grid grid-cols-3 gap-8 pb-6 flex-grow h-full overflow-hidden">
                             {task.questions.map((q, idx) => (
-                                // 移除 overflow-y-auto, 改為 flex column 佈局，讓題目自動分佈
                                 <div key={idx} className="practice-card">
                                     <div className="font-bold text-3xl mb-6 text-amber-900 bg-amber-100 px-6 py-2 rounded-lg w-fit border border-amber-300">
                                         題目 {idx + 1}
