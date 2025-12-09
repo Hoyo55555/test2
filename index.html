@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管鮑之交</title>
+    <title>管鮑之交：RPG 歷史劇場版 (HD教學專用)</title>
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -336,7 +336,7 @@
                     { speaker: "管仲", isGuan: true, text: "鮑兄...這次分紅我又多拿了，真是不好意思，家裡老母親生病需要錢..." },
                     { speaker: "鮑叔牙", isGuan: false, text: "管弟別這麼說！我知道你有困難。我們是兄弟，錢財乃身外之物，你的孝心比黃金更珍貴啊！" },
                     { speaker: "旁人", isGuan: false, isNPC: true, text: "(竊竊私語) 那個管仲真貪心，本錢沒出多少，錢倒拿挺多..." },
-                    { speaker: "鮑叔牙", isGuan: false, text: "住口！你們不懂。管仲是大才，只是時運不濟，我若是計較這些錢，豈不是侮辱了我們的交情？" }
+                    { speaker: "鮑叔牙", isGuan: false, text: "住口！你們不懂。管仲是大才，只是時運不濟，我若是計較這些錢，豈不是侮iculate了我們的交情？" }
                 ]
             },
             {
@@ -555,7 +555,8 @@
                                 <div className="text-3xl font-bold text-amber-800 mb-2 border-b border-amber-200 pb-1 inline-block w-fit">
                                     {currentLine.speaker} 說：
                                 </div>
-                                <div className="text-4xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
+                                {/* 關鍵修正：對話文字從 text-4xl 縮小到 text-3xl */}
+                                <div className="text-3xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
                                     {currentLine.text}
                                 </div>
                             </div>
