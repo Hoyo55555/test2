@@ -122,43 +122,48 @@
         
         /* 故事內文區塊高度 (確保單頁顯示) */
         .story-text-container {
-            max-height: 480px; /* 預計在 1080p 螢幕上的最大高度 */
+            /* 預計 1080p 螢幕，減去標題和對話框高度，留出足夠空間 */
+            max-height: 400px; 
             overflow: hidden;
             padding-bottom: 20px;
         }
 
+        /* === 互動層修正 (修正 2-1 & 2-3) === */
+        
+        /* 互動層包含對話框和角色 */
         .interaction-layer {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 200px; /* 總互動區域高度 */
+            height: 250px; /* 總互動區域高度 */
             z-index: 10;
             pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding-bottom: 20px;
+            padding: 0 40px; /* 兩側留白 */
         }
 
         /* === 圓形頭像樣式 (修正 2-1: 縮小) === */
         .avatar-frame {
-            width: 120px; /* 從 180px 縮小 */
+            width: 120px; /* 縮小 */
             height: 120px;
             border-radius: 50%;
-            border: 5px solid #d4af37; /* 金框縮小 */
+            border: 5px solid #d4af37;
             box-shadow: 
-                0 0 0 3px #5d4037, /* 外圈木色縮小 */
+                0 0 0 3px #5d4037,
                 0 6px 15px rgba(0,0,0,0.4);
             overflow: hidden;
             background: #fff8e1;
             position: relative;
             z-index: 30;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto; /* 允許點擊 */
         }
 
         .avatar-frame.speaking {
-            transform: scale(1.1) translateY(-5px); /* 縮小動畫幅度 */
+            transform: scale(1.1) translateY(-5px);
             border-color: #ffb300;
             box-shadow: 
                 0 0 0 3px #5d4037,
@@ -176,19 +181,21 @@
             height: 100%;
         }
 
-        /* 角色位置 (修正 2-2: 靠近對話框) */
+        /* 角色位置 (修正 2-1: 獨立定位) */
         .char-container {
             position: absolute;
-            bottom: 20px; /* 靠近對話框頂部 */
+            bottom: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            pointer-events: auto; /* 確保能點擊 */
         }
-        .char-left { left: 50%; transform: translateX(-450px); } /* 調整位置與對話框對齊 */
-        .char-right { right: 50%; transform: translateX(450px); } /* 調整位置與對話框對齊 */
+        /* 固定在畫面的左下角和右下角 */
+        .char-left { left: 80px; } 
+        .char-right { right: 80px; } 
 
         .name-badge {
-            margin-top: -10px; /* 調整標籤位置 */
+            margin-top: -10px;
             background: #3e2723;
             color: #ffb300;
             padding: 4px 16px;
@@ -201,28 +208,30 @@
             box-shadow: 0 3px 5px rgba(0,0,0,0.3);
         }
 
-        /* 對話框 (修正 2-3: 縮短長度和位置) */
-        .dialogue-box {
+        /* 對話框 (修正 2-2: 縮小並居中) */
+        .dialogue-box-wrapper {
+            position: absolute;
+            bottom: 0;
             width: 50%; /* 縮小寬度 */
-            min-width: 650px; /* 最小寬度修正 */
+            min-width: 650px;
+            pointer-events: auto; /* 讓點擊繼續對話 */
+        }
+
+        .dialogue-box {
             background: rgba(255, 255, 255, 0.98);
-            border: 4px solid #3e2723;
-            border-radius: 20px;
-            padding: 20px 30px; 
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            pointer-events: auto;
-            position: relative;
-            z-index: 25;
+            border: 5px solid #3e2723;
+            border-radius: 24px;
+            padding: 25px 40px; 
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: 120px; /* 最小高度調整 */
-            bottom: -50px; /* 將對話框從底部彈出 */
+            min-height: 120px;
         }
 
         .dialogue-box .text-3xl {
-            font-size: 2rem; /* 確保對話文字大小為 3xl */
+            font-size: 2rem; /* 保持 3xl 大小 */
         }
         
         .typewriter::after { content: '|'; animation: blink 1s step-start infinite; }
@@ -261,77 +270,55 @@
         // 自定義 SVG 角色組件 (確保圖片顯示)
         // -----------------------
         const GuanAvatar = () => (
-            // 嚴肅藍衣官員
             <svg viewBox="0 0 200 200" className="avatar-svg">
                 <defs>
                     <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#fde0c4" />
-                        <stop offset="100%" stopColor="#f5cba7" />
+                        <stop offset="0%" stopColor="#fde0c4" /><stop offset="100%" stopColor="#f5cba7" />
                     </linearGradient>
                     <linearGradient id="clothBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#4299e1" />
-                        <stop offset="100%" stopColor="#2b6cb0" />
+                        <stop offset="0%" stopColor="#4299e1" /><stop offset="100%" stopColor="#2b6cb0" />
                     </linearGradient>
                 </defs>
-                {/* 背景 */}
                 <circle cx="100" cy="100" r="100" fill="#ebf8ff" />
-                {/* 身體/衣服 */}
                 <path d="M40 200 Q100 160 160 200 L160 200 L40 200 Z" fill="url(#clothBlue)" />
                 <path d="M40 200 Q100 160 160 200" fill="none" stroke="#2c5282" strokeWidth="4" />
-                {/* 領口 */}
                 <path d="M85 180 L100 200 L115 180" fill="#fff" />
-                {/* 頭部 */}
                 <circle cx="100" cy="110" r="45" fill="url(#skinGrad)" stroke="#d69e2e" strokeWidth="2" />
-                {/* 官帽 */}
                 <path d="M70 90 L130 90 L125 50 L75 50 Z" fill="#2d3748" />
                 <rect x="60" y="85" width="80" height="15" rx="5" fill="#1a202c" />
                 <circle cx="100" cy="70" r="5" fill="#f6e05e" />
-                {/* 帽翅 */}
                 <path d="M60 90 L30 80 M140 90 L170 80" stroke="#1a202c" strokeWidth="6" strokeLinecap="round" />
-                {/* 五官 (嚴肅) */}
                 <path d="M85 115 Q100 110 115 115" fill="none" stroke="#718096" strokeWidth="2" />
                 <circle cx="85" cy="105" r="3" fill="#2d3748" />
                 <circle cx="115" cy="105" r="3" fill="#2d3748" />
                 <path d="M80 98 L95 95 M120 98 L105 95" stroke="#2d3748" strokeWidth="2" />
-                {/* 鬍子 */}
                 <path d="M95 125 L100 140 L105 125" fill="#2d3748" />
             </svg>
         );
 
         const BaoAvatar = () => (
-            // 溫和棕色官員
             <svg viewBox="0 0 200 200" className="avatar-svg">
                 <defs>
                     <linearGradient id="skinGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ffe4cc" />
-                        <stop offset="100%" stopColor="#f0c294" />
+                        <stop offset="0%" stopColor="#ffe4cc" /><stop offset="100%" stopColor="#f0c294" />
                     </linearGradient>
                     <linearGradient id="clothBrown" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#d69e2e" />
-                        <stop offset="100%" stopColor="#975a16" />
+                        <stop offset="0%" stopColor="#d69e2e" /><stop offset="100%" stopColor="#975a16" />
                     </linearGradient>
                 </defs>
-                {/* 背景 */}
                 <circle cx="100" cy="100" r="100" fill="#fffff0" />
-                {/* 身體/衣服 */}
                 <path d="M40 200 Q100 160 160 200 L160 200 L40 200 Z" fill="url(#clothBrown)" />
                 <path d="M40 200 Q100 160 160 200" fill="none" stroke="#744210" strokeWidth="4" />
-                {/* 領口 */}
                 <path d="M85 180 L100 200 L115 180" fill="#fff" />
-                {/* 頭部 */}
                 <circle cx="100" cy="110" r="45" fill="url(#skinGrad2)" stroke="#b7791f" strokeWidth="2" />
-                {/* 官帽 */}
                 <path d="M75 90 L125 90 L120 55 L80 55 Z" fill="#2d3748" />
                 <rect x="65" y="85" width="70" height="15" rx="5" fill="#1a202c" />
                 <circle cx="100" cy="75" r="5" fill="#63b3ed" />
-                {/* 帽翅 (下垂表示溫和) */}
                 <path d="M65 92 Q40 100 30 95 M135 92 Q160 100 170 95" stroke="#1a202c" strokeWidth="5" strokeLinecap="round" />
-                {/* 五官 (溫和微笑) */}
                 <path d="M90 120 Q100 125 110 120" fill="none" stroke="#718096" strokeWidth="2" />
                 <circle cx="85" cy="105" r="3" fill="#2d3748" />
                 <circle cx="115" cy="105" r="3" fill="#2d3748" />
                 <path d="M80 95 Q90 90 95 95 M120 95 Q110 90 105 95" stroke="#2d3748" strokeWidth="1.5" />
-                {/* 鬍子 */}
                 <path d="M98 128 Q100 135 102 128" fill="none" stroke="#2d3748" strokeWidth="1" />
             </svg>
         );
@@ -535,7 +522,7 @@
                 return (
                     <div className="story-container fade-in relative h-[calc(100vh-96px)]">
                         
-                        {/* 1. 課文閱讀區 (修正 1) */}
+                        {/* 1. 課文閱讀區 (單頁顯示) */}
                         <div className="full-text-area">
                             <div className="text-content">
                                 <button 
@@ -544,7 +531,7 @@
                                 >
                                     ⬅ 返回選單
                                 </button>
-                                <h2 className="text-5xl font-bold text-amber-900 mb-6 text-center border-b-4 border-double border-amber-200 pb-4">{chapter.title}</h2>
+                                <h2 className="text-5xl font-bold text-amber-900 mb-8 text-center border-b-4 border-double border-amber-200 pb-4">{chapter.title}</h2>
                                 <div className="story-text-container">
                                     <p className="text-3xl leading-[2.2] text-gray-900 text-justify font-bold whitespace-pre-line px-4 tracking-wider">
                                         {chapter.content}
@@ -553,44 +540,59 @@
                             </div>
                         </div>
 
-                        {/* 2. 底部互動層 (修正 2) */}
-                        <div className="interaction-layer flex-col justify-end items-center w-full">
+                        {/* 2. 底部互動層：角色和對話框獨立定位 */}
+                        <div className="interaction-layer">
                             
-                            {/* 中間對話框 */}
-                            <div className="dialogue-box relative z-25 flex items-center justify-center">
-                                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full flex gap-12">
-                                    {/* 左側角色: 管仲 */}
-                                    <div className="char-container flex-col items-center">
-                                        <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
-                                            <GuanAvatar />
-                                        </div>
-                                        <div className="name-badge">管仲</div>
-                                    </div>
-                                    
-                                    {/* 右側角色: 鮑叔牙 */}
-                                    <div className="char-container flex-col items-center">
-                                        <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
-                                            <BaoAvatar />
-                                        </div>
-                                        <div className="name-badge">鮑叔牙</div>
-                                    </div>
+                            {/* 左側角色: 管仲 (固定左下) */}
+                            <div className="char-container char-left">
+                                <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
+                                    <GuanAvatar />
                                 </div>
-                                
-                                <div className="w-full">
+                                <div className="name-badge">管仲</div>
+                            </div>
+
+                            {/* 中間對話框 (固定底部中央，不遮擋文章) */}
+                            <div className="dialogue-box-wrapper" onClick={handleNextDialogue}>
+                                <div className="dialogue-box">
                                     <div className="text-2xl font-bold text-amber-800 mb-2 border-b border-amber-200 pb-1 inline-block w-fit">
                                         {currentLine.speaker} 說：
                                     </div>
-                                    {/* 關鍵修正：對話文字從 text-4xl 縮小到 text-3xl */}
                                     <div className="text-3xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
                                         {currentLine.text}
                                     </div>
                                 </div>
                             </div>
 
+                            {/* 右側角色: 鮑叔牙 (固定右下) */}
+                            <div className="char-container char-right">
+                                <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
+                                    <BaoAvatar />
+                                </div>
+                                <div className="name-badge">鮑叔牙</div>
+                            </div>
+
+                        </div>
+                        
+                        {/* 點擊推進對話的函數 */}
+                        <div className="absolute inset-0 cursor-pointer z-5" 
+                             onClick={handleNextDialogue}>
                         </div>
                     </div>
                 );
             };
+            
+            const handleNextDialogue = () => {
+                const chapter = STORY_CHAPTERS.find(c => c.id === selectedChapter);
+                if (dialogueStep < chapter.dialogue.length - 1) {
+                    setDialogueStep(dialogueStep + 1);
+                } else {
+                    // 對話結束後，回到章節選單
+                    alert("本章節結束！請選擇其他章節或進行測驗。"); 
+                    setSelectedChapter(null);
+                    setDialogueStep(0);
+                }
+            };
+
 
             // 練習題
             const renderPractice = () => {
