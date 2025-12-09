@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管鮑之交</title>
+    <title>管鮑之交：RPG 歷史劇場版 (HD教學專用)</title>
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -94,63 +94,61 @@
             align-items: center;
         }
 
-        /* === 故事劇場佈局 (修正 1) === */
+        /* === 故事劇場佈局 === */
         
         .full-text-area {
             position: absolute;
-            top: 96px; /* 導覽列高度 */
+            top: 96px; 
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #f3eed8; /* 設為背景色 */
-            padding: 20px 40px; /* 縮減上下 padding */
-            overflow: hidden; /* 關鍵：防止捲動 */
+            background-color: #f3eed8; 
+            padding: 20px 40px; 
+            overflow: hidden; 
             z-index: 1;
         }
 
         .text-content {
-            max-width: 1200px; /* 縮小寬度，讓內容更集中 */
+            max-width: 1200px; 
             margin: 0 auto;
             background: white;
-            padding: 40px; /* 縮減內 padding */
+            padding: 40px; 
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid #e0e0e0;
             position: relative;
-            overflow-y: hidden; /* 再次確保內容區域不滾動 */
+            overflow-y: hidden; 
         }
         
-        /* 故事內文區塊高度 (確保單頁顯示) */
+        /* 故事內文區塊高度 */
         .story-text-container {
-            /* 預計 1080p 螢幕，減去標題和對話框高度，留出足夠空間 */
             max-height: 400px; 
             overflow: hidden;
             padding-bottom: 20px;
         }
 
-        /* === 互動層修正 (修正 2-1 & 2-3) === */
+        /* === 互動層修正：將所有元素放在底部，不影響文章區 === */
         
-        /* 互動層包含對話框和角色 */
         .interaction-layer {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 250px; /* 總互動區域高度 */
+            height: 250px; 
             z-index: 10;
             pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding: 0 40px; /* 兩側留白 */
+            padding: 0 40px; 
         }
 
-        /* === 圓形頭像樣式 (修正 2-1: 縮小) === */
+        /* === 圓形頭像樣式 (修正動畫) === */
         .avatar-frame {
-            width: 120px; /* 縮小 */
+            width: 120px; 
             height: 120px;
             border-radius: 50%;
-            border: 5px solid #d4af37;
+            border: 5px solid #d4af37; 
             box-shadow: 
                 0 0 0 3px #5d4037,
                 0 6px 15px rgba(0,0,0,0.4);
@@ -159,21 +157,35 @@
             position: relative;
             z-index: 30;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto; /* 允許點擊 */
+            pointer-events: auto;
+            /* 基礎動畫狀態 */
+            transform: scale(0.95) translateY(0); 
+            filter: grayscale(0.7) brightness(0.7);
+        }
+        
+        /* 說話者動畫 */
+        @keyframes speaking-bounce {
+            0%, 100% { transform: scale(1.1) translateY(0); }
+            50% { transform: scale(1.1) translateY(-5px); }
         }
 
         .avatar-frame.speaking {
-            transform: scale(1.1) translateY(-5px);
+            /* 啟用動畫 */
+            animation: speaking-bounce 1s infinite alternate; 
+            /* 取消灰階，突出顯示 */
+            filter: grayscale(0) brightness(1); 
             border-color: #ffb300;
             box-shadow: 
                 0 0 0 3px #5d4037,
-                0 0 20px rgba(255, 179, 0, 0.6);
+                0 0 20px rgba(255, 179, 0, 0.8);
         }
 
         .avatar-frame.silent {
-            transform: scale(0.95);
+            /* 非說話者狀態 */
+            transform: scale(0.95) translateY(0); 
             filter: grayscale(0.7) brightness(0.7);
             border-color: #8d6e63;
+            animation: none;
         }
 
         .avatar-svg {
@@ -188,7 +200,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            pointer-events: auto; /* 確保能點擊 */
+            pointer-events: auto;
         }
         /* 固定在畫面的左下角和右下角 */
         .char-left { left: 80px; } 
@@ -211,10 +223,13 @@
         /* 對話框 (修正 2-2: 縮小並居中) */
         .dialogue-box-wrapper {
             position: absolute;
-            bottom: 0;
-            width: 50%; /* 縮小寬度 */
+            bottom: 20px; /* 與角色對齊 */
+            width: 50%; 
             min-width: 650px;
-            pointer-events: auto; /* 讓點擊繼續對話 */
+            pointer-events: auto;
+            /* 居中設置 */
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .dialogue-box {
@@ -222,16 +237,16 @@
             border: 5px solid #3e2723;
             border-radius: 24px;
             padding: 25px 40px; 
-            margin-bottom: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
             min-height: 120px;
+            margin-bottom: 0; /* 移除底部多餘 margin */
         }
 
         .dialogue-box .text-3xl {
-            font-size: 2rem; /* 保持 3xl 大小 */
+            font-size: 2rem; 
         }
         
         .typewriter::after { content: '|'; animation: blink 1s step-start infinite; }
@@ -324,7 +339,7 @@
         );
 
         // -----------------------
-        // 故事資料
+        // 故事資料 (略)
         // -----------------------
         const STORY_CHAPTERS = [
             {
@@ -374,7 +389,7 @@
         ];
 
         // -----------------------
-        // 練習題資料
+        // 練習題資料 (略)
         // -----------------------
         const PRACTICE_TASKS = [
             {
@@ -573,7 +588,7 @@
 
                         </div>
                         
-                        {/* 點擊推進對話的函數 */}
+                        {/* 點擊推進對話的函數 (覆蓋整個內容區) */}
                         <div className="absolute inset-0 cursor-pointer z-5" 
                              onClick={handleNextDialogue}>
                         </div>
