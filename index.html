@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管鮑之交：RPG 歷史劇場版 </title>
+    <title>管鮑之交</title>
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -29,16 +29,17 @@
             color: var(--wood-dark);
             overflow: hidden;
             height: 100vh;
+            width: 100vw; /* 確保寬度佔滿 */
             margin: 0;
         }
 
         /* 字體設定 */
         .font-art { font-family: 'Ma Shan Zheng', cursive; }
 
-        /* 通用木質按鈕 (強化邊框版) */
+        /* 通用木質按鈕 */
         .btn-wood {
             background: linear-gradient(to bottom, #8d6e63, #5d4037);
-            border: 4px solid #3e2723;
+            border: 3px solid #3e2723;
             color: #fff8e1;
             box-shadow: 0 4px 0 #2d1b18, 0 5px 10px rgba(0,0,0,0.3);
             transition: all 0.1s;
@@ -47,6 +48,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            cursor: pointer;
         }
         .btn-wood:hover {
             filter: brightness(1.15);
@@ -68,32 +70,24 @@
         /* 卡片面板 */
         .card-panel {
             background-color: #fff8e1;
-            border: 5px solid #5d4037;
+            border: 4px solid #5d4037;
             border-radius: 16px;
-            box-shadow: 5px 5px 0px rgba(62, 39, 35, 0.2), 0 10px 20px rgba(0,0,0,0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 4px 4px 0px rgba(62, 39, 35, 0.2), 0 8px 16px rgba(0,0,0,0.15);
+            transition: transform 0.2s;
             position: relative;
             overflow: hidden;
+            /* 移除舊版可能的固定高度，確保彈性 */
         }
         .card-panel:hover {
             transform: translateY(-5px);
             border-color: #ffb74d;
-            box-shadow: 5px 10px 0px rgba(62, 39, 35, 0.2), 0 15px 30px rgba(0,0,0,0.2);
-        }
-        .card-panel::after {
-            content: '';
-            position: absolute;
-            top: 4px; left: 4px; right: 4px; bottom: 4px;
-            border: 2px dashed #d7ccc8;
-            border-radius: 10px;
-            pointer-events: none;
         }
 
         /* 導覽列 */
         .nav-container {
             background-image: url("https://www.transparenttextures.com/patterns/wood-pattern.png");
             background-color: #4e342e;
-            border-bottom: 6px solid #ffb74d;
+            border-bottom: 5px solid #ffb74d;
             box-shadow: 0 4px 10px rgba(0,0,0,0.4);
             z-index: 50;
             position: relative;
@@ -103,16 +97,16 @@
 
         /* === 故事劇場佈局 === */
         
-        /* 1. 全螢幕閱讀區 */
+        /* 1. 全螢幕閱讀區 - 針對 1080p 優化 */
         .full-text-area {
             position: absolute;
-            top: 70px;
+            top: 80px; /* 導覽列高度 */
             left: 0;
             right: 0;
             bottom: 0;
             background-color: #fffbf0;
             padding: 40px;
-            padding-bottom: 300px; /* 調整底部留白，因為對話框變小了 */
+            padding-bottom: 300px; /* 預留底部空間給對話框 */
             overflow-y: auto;
             z-index: 1;
             scrollbar-width: thin;
@@ -120,7 +114,7 @@
         }
 
         .text-content {
-            max-width: 1000px;
+            max-width: 1400px; /* 加寬閱讀區塊 */
             margin: 0 auto;
             background: white;
             padding: 50px;
@@ -129,16 +123,6 @@
             border: 1px solid #e0e0e0;
             position: relative;
         }
-        
-        .text-content::before {
-            content: '';
-            position: absolute;
-            top: -10px; left: 20px; right: 20px;
-            height: 20px;
-            background: #5d4037;
-            border-radius: 10px;
-            z-index: -1;
-        }
 
         /* 2. 底部互動層 */
         .interaction-layer {
@@ -146,97 +130,133 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 250px; /* 高度調小 */
+            height: 280px; /* 稍微增高以容納更大的頭像 */
             z-index: 10;
             pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding-bottom: 15px;
+            padding-bottom: 30px;
         }
 
-        /* 角色圖片 (縮小) */
-        .avatar-img {
-            height: 200px; /* 從 280px 縮小至 200px */
-            width: auto;
-            filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.4));
-            transition: transform 0.3s ease, filter 0.3s ease;
+        /* === 圓形頭像樣式 === */
+        .avatar-frame {
+            width: 180px; /* 加大頭像 */
+            height: 180px;
+            border-radius: 50%;
+            border: 6px solid #d4af37;
+            box-shadow: 
+                0 0 0 4px #5d4037,
+                0 10px 20px rgba(0,0,0,0.5),
+                inset 0 0 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+            background: #fff8e1;
+            position: relative;
+            z-index: 30;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: auto;
         }
-        
+
+        .avatar-frame.speaking {
+            transform: scale(1.15) translateY(-10px);
+            border-color: #ffb300;
+            box-shadow: 
+                0 0 0 4px #5d4037,
+                0 0 30px rgba(255, 179, 0, 0.6);
+        }
+
+        .avatar-frame.silent {
+            transform: scale(0.9);
+            filter: grayscale(0.6) brightness(0.7);
+            border-color: #8d6e63;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+
         /* 角色位置 */
-        .char-left {
+        .char-container {
             position: absolute;
-            left: 8%; /* 稍微往中間靠一點 */
-            bottom: 0;
-            z-index: 20;
+            bottom: 50px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .char-right {
-            position: absolute;
-            right: 8%; /* 稍微往中間靠一點 */
-            bottom: 0;
-            z-index: 20;
+        .char-left { left: 12%; transform: translateX(-50%); }
+        .char-right { right: 12%; transform: translateX(50%); }
+
+        .name-badge {
+            margin-top: -15px;
+            background: #3e2723;
+            color: #ffb300;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border: 2px solid #ffb300;
+            z-index: 40;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* 說話效果 */
-        .speaking {
-            transform: scale(1.1);
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6)) brightness(1.1);
-            z-index: 30;
-        }
-        .silent {
-            transform: scale(0.95);
-            filter: grayscale(0.4) brightness(0.7);
-            z-index: 15;
-        }
-
-        /* 底部對話框 (縮小) */
+        /* 對話框 - 配合 1920 寬度 */
         .dialogue-box {
-            width: 55%; /* 從 65% 縮小 */
-            min-width: 500px; /* 從 600px 縮小 */
-            background: rgba(255, 255, 255, 0.98);
-            border: 4px solid #3e2723;
-            border-radius: 16px;
-            padding: 20px 30px; /* 內距縮小 */
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            width: 60%; /* 加寬 */
+            min-width: 800px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 5px solid #3e2723;
+            border-radius: 24px;
+            padding: 30px 45px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             pointer-events: auto;
             position: relative;
             z-index: 25;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            min-height: 160px;
         }
         
-        /* 說話者標籤 (微調) */
-        .speaker-tag {
+        .img-upload-hint {
             position: absolute;
-            top: -20px; /* 位置微調 */
-            left: 30px;
-            background: #3e2723;
-            color: #ffb300;
-            padding: 4px 20px; /* 尺寸微調 */
-            border-radius: 30px;
-            font-weight: 900;
-            font-size: 1.2rem; /* 字體微縮 */
-            border: 2px solid #ffb300;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            cursor: pointer;
         }
+        .avatar-frame:hover .img-upload-hint { opacity: 1; }
 
         .typewriter::after { content: '|'; animation: blink 1s step-start infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        /* 練習題卡片 */
+        /* === 練習題卡片 (全高修正) === */
         .practice-card {
             background-color: white;
-            border: 3px solid #8d6e63;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: 320px;
+            border: 4px solid #8d6e63;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            height: 100%; /* 關鍵：填滿父容器高度 */
             display: flex;
             flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .practice-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
         }
 
         .fade-in { animation: fadeIn 0.5s ease-out; }
@@ -250,12 +270,6 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // -----------------------
-        // 角色設定
-        // -----------------------
-        const AVATAR_GUAN = "./Gemini_Generated_Image_9hndxl9hndxl9hnd.jpg"; // 管仲
-        const AVATAR_BAO = "./Gemini_Generated_Image_9hndxl9hndxl9hnd (1).jpg"; // 鮑叔牙
-        
         // -----------------------
         // 故事資料
         // -----------------------
@@ -361,12 +375,24 @@
             const [selectedChapter, setSelectedChapter] = useState(null);
             const [selectedTask, setSelectedTask] = useState(null);
             const [dialogueStep, setDialogueStep] = useState(0);
-            
-            // 練習題答案狀態
             const [answers, setAnswers] = useState({});
             const [showRef, setShowRef] = useState({});
 
-            // 自動播放邏輯
+            // 圖片路徑
+            const [imgGuan, setImgGuan] = useState("./Gemini_Generated_Image_9hndxl9hndxl9hnd.jpg");
+            const [imgBao, setImgBao] = useState("./Gemini_Generated_Image_9hndxl9hndxl9hnd%20(1).jpg");
+            
+            const guanInputRef = useRef(null);
+            const baoInputRef = useRef(null);
+
+            const handleImageUpload = (e, setImg) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    setImg(url);
+                }
+            };
+
             useEffect(() => {
                 let timer;
                 if (selectedChapter) {
@@ -387,14 +413,14 @@
 
             // 導覽列
             const renderNav = () => (
-                <div className="nav-container h-20 flex justify-center items-center gap-6 sticky top-0 px-4">
-                    <button onClick={() => setTab('HOME')} className={`btn-wood px-8 py-3 rounded-full font-bold text-xl tracking-wide ${tab === 'HOME' ? 'active' : ''}`}>
+                <div className="nav-container h-24 flex justify-center items-center gap-8 sticky top-0 px-4">
+                    <button onClick={() => setTab('HOME')} className={`btn-wood px-10 py-3 rounded-full font-bold text-2xl tracking-wide ${tab === 'HOME' ? 'active' : ''}`}>
                         <span>📺</span> 影音導讀
                     </button>
-                    <button onClick={() => {setTab('STORY'); setSelectedChapter(null);}} className={`btn-wood px-8 py-3 rounded-full font-bold text-xl tracking-wide ${tab === 'STORY' ? 'active' : ''}`}>
+                    <button onClick={() => {setTab('STORY'); setSelectedChapter(null);}} className={`btn-wood px-10 py-3 rounded-full font-bold text-2xl tracking-wide ${tab === 'STORY' ? 'active' : ''}`}>
                         <span>📖</span> 故事劇場
                     </button>
-                    <button onClick={() => {setTab('PRACTICE'); setSelectedTask(null);}} className={`btn-wood px-8 py-3 rounded-full font-bold text-xl tracking-wide ${tab === 'PRACTICE' ? 'active' : ''}`}>
+                    <button onClick={() => {setTab('PRACTICE'); setSelectedTask(null);}} className={`btn-wood px-10 py-3 rounded-full font-bold text-2xl tracking-wide ${tab === 'PRACTICE' ? 'active' : ''}`}>
                         <span>📝</span> 思考與練習
                     </button>
                 </div>
@@ -402,17 +428,17 @@
 
             // 首頁
             const renderHome = () => (
-                <div className="flex flex-col items-center justify-center h-[calc(100vh-80px)] fade-in">
-                    <h1 className="text-8xl font-art text-amber-900 mb-8 drop-shadow-xl tracking-widest text-stroke">管鮑之交</h1>
-                    <div className="p-3 bg-black rounded-xl border-8 border-[#5d4037] shadow-2xl relative">
-                        {/* 裝飾釘子 */}
-                        <div className="absolute top-2 left-2 w-4 h-4 bg-[#8d6e63] rounded-full shadow-inner"></div>
-                        <div className="absolute top-2 right-2 w-4 h-4 bg-[#8d6e63] rounded-full shadow-inner"></div>
-                        <div className="absolute bottom-2 left-2 w-4 h-4 bg-[#8d6e63] rounded-full shadow-inner"></div>
-                        <div className="absolute bottom-2 right-2 w-4 h-4 bg-[#8d6e63] rounded-full shadow-inner"></div>
-                        
+                <div className="flex flex-col items-center justify-center h-[calc(100vh-96px)] fade-in">
+                    <h1 className="text-9xl font-art text-amber-900 mb-10 drop-shadow-xl tracking-widest text-stroke">管鮑之交</h1>
+                    <div className="p-4 bg-black rounded-2xl border-8 border-[#5d4037] shadow-2xl relative">
+                         {/* 裝飾釘子 */}
+                         <div className="absolute top-3 left-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
+                         <div className="absolute top-3 right-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
+                         <div className="absolute bottom-3 left-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
+                         <div className="absolute bottom-3 right-3 w-5 h-5 bg-[#8d6e63] rounded-full shadow-inner"></div>
+                         
                         <iframe 
-                            width="800" height="450"
+                            width="960" height="540" 
                             src="https://www.youtube.com/embed/_nFtWKUrISI?start=78" 
                             title="YouTube video player" 
                             frameBorder="0" 
@@ -421,7 +447,7 @@
                             className="rounded block"
                         ></iframe>
                     </div>
-                    <p className="mt-6 text-xl text-amber-900 font-bold bg-white/50 px-6 py-2 rounded-full shadow-sm">
+                    <p className="mt-8 text-2xl text-amber-900 font-bold bg-white/50 px-8 py-3 rounded-full shadow-sm">
                         請點選上方按鈕開始課程
                     </p>
                 </div>
@@ -431,18 +457,18 @@
             const renderStory = () => {
                 if (!selectedChapter) {
                     return (
-                        <div className="h-[calc(100vh-80px)] flex flex-col justify-center items-center fade-in px-8">
-                            <h2 className="text-5xl font-art text-amber-900 mb-12 border-b-4 border-amber-800 pb-4 px-12">請選擇故事篇章</h2>
-                            <div className="grid grid-cols-4 gap-8 w-full max-w-7xl">
+                        <div className="h-[calc(100vh-96px)] flex flex-col justify-center items-center fade-in px-8">
+                            <h2 className="text-6xl font-art text-amber-900 mb-16 border-b-4 border-amber-800 pb-4 px-12">請選擇故事篇章</h2>
+                            <div className="grid grid-cols-4 gap-10 w-full max-w-[90%]">
                                 {STORY_CHAPTERS.map((chap, index) => (
                                     <button 
                                         key={chap.id}
                                         onClick={() => setSelectedChapter(chap.id)}
-                                        className="card-panel h-80 flex flex-col items-center justify-center p-4 cursor-pointer hover:scale-105 group"
+                                        className="card-panel h-96 flex flex-col items-center justify-center p-6 cursor-pointer hover:scale-105 group"
                                     >
-                                        <div className="text-8xl mb-4 font-bold text-amber-900/10 group-hover:text-amber-600/20 transition-colors font-serif">{index + 1}</div>
-                                        <h3 className="text-3xl font-bold text-amber-900 mb-2">{chap.title.split('、')[1]}</h3>
-                                        <span className="text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity mt-2 font-bold">點擊閱讀 ➤</span>
+                                        <div className="text-9xl mb-6 font-bold text-amber-900/10 group-hover:text-amber-600/20 transition-colors font-serif">{index + 1}</div>
+                                        <h3 className="text-4xl font-bold text-amber-900 mb-4">{chap.title.split('、')[1]}</h3>
+                                        <span className="text-amber-700 opacity-0 group-hover:opacity-100 transition-opacity mt-4 font-bold text-xl">點擊閱讀 ➤</span>
                                     </button>
                                 ))}
                             </div>
@@ -453,24 +479,26 @@
                 const chapter = STORY_CHAPTERS.find(c => c.id === selectedChapter);
                 const currentLine = chapter.dialogue[dialogueStep];
                 
-                // 判斷發言者與樣式
                 const isGuanSpeaking = currentLine.speaker === "管仲";
                 const isBaoSpeaking = !isGuanSpeaking && currentLine.speaker !== "旁人" && currentLine.speaker !== "齊桓公"; 
 
                 return (
-                    <div className="story-container fade-in relative h-[calc(100vh-80px)]">
+                    <div className="story-container fade-in relative h-[calc(100vh-96px)]">
                         
+                        <input type="file" ref={guanInputRef} onChange={(e) => handleImageUpload(e, setImgGuan)} className="hidden" accept="image/*" />
+                        <input type="file" ref={baoInputRef} onChange={(e) => handleImageUpload(e, setImgBao)} className="hidden" accept="image/*" />
+
                         {/* 1. 課文卷軸閱讀區 */}
                         <div className="full-text-area">
                             <div className="text-content">
                                 <button 
                                     onClick={() => setSelectedChapter(null)}
-                                    className="mb-6 inline-block btn-wood px-6 py-2 rounded-lg font-bold text-lg"
+                                    className="mb-8 inline-block btn-wood px-8 py-3 rounded-lg font-bold text-xl"
                                 >
                                     ⬅ 返回選單
                                 </button>
-                                <h2 className="text-5xl font-bold text-amber-900 mb-8 text-center border-b-4 border-double border-amber-200 pb-4">{chapter.title}</h2>
-                                <p className="text-4xl leading-loose text-gray-900 text-justify font-bold whitespace-pre-line px-4">
+                                <h2 className="text-6xl font-bold text-amber-900 mb-10 text-center border-b-4 border-double border-amber-200 pb-6">{chapter.title}</h2>
+                                <p className="text-4xl leading-[2.5] text-gray-900 text-justify font-bold whitespace-pre-line px-8 tracking-wider">
                                     {chapter.content}
                                 </p>
                             </div>
@@ -480,37 +508,49 @@
                         <div className="interaction-layer">
                             
                             {/* 左側角色: 管仲 */}
-                            <div className="char-left">
-                                <img 
-                                    src={AVATAR_GUAN} 
-                                    className={`avatar-img ${isGuanSpeaking ? 'speaking' : 'silent'}`} 
-                                    alt="管仲" 
-                                    onError={(e) => { e.target.src = "https://placehold.co/300x400?text=GuanZhong"; }} 
-                                />
+                            <div className="char-container char-left">
+                                <div 
+                                    className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}
+                                    onClick={() => guanInputRef.current.click()}
+                                    title="點擊更換圖片"
+                                >
+                                    <img 
+                                        src={imgGuan} 
+                                        className="avatar-img"
+                                        alt="管仲" 
+                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=GuanZhong"; }} 
+                                    />
+                                    <div className="img-upload-hint">更換<br/>圖片</div>
+                                </div>
+                                <div className="name-badge">管仲</div>
                             </div>
 
                             {/* 中間對話框 */}
                             <div className="dialogue-box">
-                                <div className="speaker-tag">
-                                    {currentLine.speaker}
+                                <div className="text-3xl font-bold text-amber-800 mb-2 border-b border-amber-200 pb-1 inline-block w-fit">
+                                    {currentLine.speaker} 說：
                                 </div>
-                                {/* 調整文字大小至 text-3xl */}
-                                <div className="text-3xl font-bold text-gray-800 typewriter mt-2 leading-relaxed">
+                                <div className="text-4xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
                                     {currentLine.text}
                                 </div>
-                                {/* 進度條 */}
-                                <div className="absolute bottom-0 left-0 h-2 bg-amber-500 rounded-b-xl" style={{width: '100%', animation: 'width 6s linear infinite'}}></div>
                             </div>
 
                             {/* 右側角色: 鮑叔牙 */}
-                            <div className="char-right">
-                                <img 
-                                    src={AVATAR_BAO} 
-                                    className={`avatar-img ${isBaoSpeaking ? 'speaking' : 'silent'}`} 
-                                    alt="鮑叔牙" 
-                                    style={{ transform: "scaleX(-1)" }} 
-                                    onError={(e) => { e.target.src = "https://placehold.co/300x400?text=BaoShuya"; }} 
-                                />
+                            <div className="char-container char-right">
+                                <div 
+                                    className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}
+                                    onClick={() => baoInputRef.current.click()}
+                                    title="點擊更換圖片"
+                                >
+                                    <img 
+                                        src={imgBao} 
+                                        className="avatar-img"
+                                        alt="鮑叔牙" 
+                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=BaoShuya"; }} 
+                                    />
+                                    <div className="img-upload-hint">更換<br/>圖片</div>
+                                </div>
+                                <div className="name-badge">鮑叔牙</div>
                             </div>
 
                         </div>
@@ -523,19 +563,19 @@
             const renderPractice = () => {
                 if (!selectedTask) {
                     return (
-                        <div className="h-[calc(100vh-80px)] flex flex-col justify-center items-center fade-in px-8">
-                            <h2 className="text-5xl font-art text-amber-900 mb-16 border-b-4 border-amber-800 pb-4 px-12">請選擇挑戰任務</h2>
-                            <div className="grid grid-cols-2 gap-16 w-full max-w-5xl">
+                        <div className="h-[calc(100vh-96px)] flex flex-col justify-center items-center fade-in px-8">
+                            <h2 className="text-6xl font-art text-amber-900 mb-20 border-b-4 border-amber-800 pb-4 px-12">請選擇挑戰任務</h2>
+                            <div className="grid grid-cols-2 gap-20 w-full max-w-6xl">
                                 {PRACTICE_TASKS.map((task) => (
                                     <button 
                                         key={task.id}
                                         onClick={() => setSelectedTask(task.id)}
-                                        className="card-panel h-80 flex flex-col items-center justify-center p-8 cursor-pointer hover:scale-105 group"
+                                        className="card-panel h-96 flex flex-col items-center justify-center p-8 cursor-pointer hover:scale-105 group"
                                     >
-                                        <div className="text-8xl mb-6 transform group-hover:scale-110 transition-transform">
+                                        <div className="text-9xl mb-8 transform group-hover:scale-110 transition-transform">
                                             {task.type === 'choice_group' ? '✅' : '💡'}
                                         </div>
-                                        <h3 className="text-5xl font-bold text-amber-900">{task.title}</h3>
+                                        <h3 className="text-6xl font-bold text-amber-900">{task.title}</h3>
                                     </button>
                                 ))}
                             </div>
@@ -546,28 +586,31 @@
                 const task = PRACTICE_TASKS.find(t => t.id === selectedTask);
 
                 return (
-                    <div className="h-[calc(100vh-80px)] p-6 fade-in flex flex-col max-w-7xl mx-auto w-full">
-                        <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-4xl font-bold text-amber-900 border-l-8 border-amber-800 pl-4">{task.title}</h2>
+                    // 這裡改為使用 calc(100vh - 導覽列高度) 確保填滿垂直空間
+                    // w-[95%] 讓它更寬，適合 1920 解析度
+                    <div className="h-[calc(100vh-96px)] p-8 fade-in flex flex-col w-[95%] mx-auto">
+                        <div className="flex justify-between items-center mb-6 flex-shrink-0">
+                            <h2 className="text-5xl font-bold text-amber-900 border-l-8 border-amber-800 pl-6">{task.title}</h2>
                             <button 
                                 onClick={() => setSelectedTask(null)}
-                                className="btn-wood px-6 py-2 rounded-lg font-bold text-xl"
+                                className="btn-wood px-8 py-3 rounded-lg font-bold text-2xl"
                             >
                                 ⬅ 返回選單
                             </button>
                         </div>
 
-                        {/* 三題並列 */}
-                        <div className="grid grid-cols-3 gap-8 pb-4 h-full">
+                        {/* 三題並列，h-full + pb-6 確保佔滿剩餘高度 */}
+                        <div className="grid grid-cols-3 gap-8 pb-6 flex-grow h-full overflow-hidden">
                             {task.questions.map((q, idx) => (
-                                <div key={idx} className="practice-card overflow-y-auto">
-                                    <div className="font-bold text-2xl mb-4 text-amber-900 bg-amber-100 px-4 py-2 rounded-lg w-fit border border-amber-300">
+                                // 移除 overflow-y-auto, 改為 flex column 佈局，讓題目自動分佈
+                                <div key={idx} className="practice-card">
+                                    <div className="font-bold text-3xl mb-6 text-amber-900 bg-amber-100 px-6 py-2 rounded-lg w-fit border border-amber-300">
                                         題目 {idx + 1}
                                     </div>
-                                    <p className="text-3xl font-bold text-gray-800 mb-6 flex-grow leading-relaxed">{q.q}</p>
+                                    <p className="text-4xl font-bold text-gray-800 mb-8 leading-relaxed">{q.q}</p>
 
                                     {task.type === 'choice_group' && (
-                                        <div className="space-y-4 mt-auto">
+                                        <div className="flex flex-col gap-4 mt-auto">
                                             {q.opts.map((opt, oIdx) => {
                                                 const qKey = `${task.id}-${idx}`; 
                                                 const isSelected = answers[qKey] === oIdx;
@@ -576,7 +619,7 @@
                                                     <button 
                                                         key={oIdx}
                                                         onClick={() => setAnswers({...answers, [qKey]: oIdx})}
-                                                        className={`w-full text-left p-4 rounded-xl border-4 font-bold text-2xl transition-all ${isSelected ? (isCorrect ? 'bg-green-100 border-green-600 text-green-900' : 'bg-red-100 border-red-600 text-red-900') : 'bg-white border-gray-200 hover:bg-amber-50 hover:border-amber-300 text-gray-700'}`}
+                                                        className={`w-full text-left p-6 rounded-xl border-4 font-bold text-3xl transition-all ${isSelected ? (isCorrect ? 'bg-green-100 border-green-600 text-green-900' : 'bg-red-100 border-red-600 text-red-900') : 'bg-white border-gray-200 hover:bg-amber-50 hover:border-amber-300 text-gray-700'}`}
                                                     >
                                                         {String.fromCharCode(65+oIdx)}. {opt}
                                                         {isSelected && (isCorrect ? ' ⭕' : ' ❌')}
@@ -587,16 +630,16 @@
                                     )}
 
                                     {task.type === 'open_group' && (
-                                        <div className="flex flex-col gap-6 mt-auto">
-                                            <textarea className="w-full h-40 p-4 border-2 border-gray-300 rounded-xl bg-gray-50 text-2xl focus:outline-none focus:border-amber-500 shadow-inner" placeholder="請輸入看法..."></textarea>
+                                        <div className="flex flex-col gap-6 mt-auto flex-grow">
+                                            <textarea className="w-full flex-grow p-6 border-2 border-gray-300 rounded-xl bg-gray-50 text-3xl focus:outline-none focus:border-amber-500 shadow-inner resize-none" placeholder="請輸入看法..."></textarea>
                                             <button 
                                                 onClick={() => setShowRef(prev => ({...prev, [`${task.id}-${idx}`]: !prev[`${task.id}-${idx}`]}))}
-                                                className="bg-amber-600 text-white py-3 rounded-xl font-bold hover:bg-amber-700 text-2xl shadow-md"
+                                                className="bg-amber-600 text-white py-4 rounded-xl font-bold hover:bg-amber-700 text-3xl shadow-md flex-shrink-0"
                                             >
                                                 {showRef[`${task.id}-${idx}`] ? '隱藏參考' : '💡 看參考答案'}
                                             </button>
                                             {showRef[`${task.id}-${idx}`] && (
-                                                <div className="bg-yellow-50 p-4 rounded-xl text-amber-900 font-bold border-2 border-yellow-300 text-xl shadow-sm animate-pulse">
+                                                <div className="bg-yellow-50 p-6 rounded-xl text-amber-900 font-bold border-2 border-yellow-300 text-2xl shadow-sm animate-pulse flex-shrink-0">
                                                     {q.ref}
                                                 </div>
                                             )}
