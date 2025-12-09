@@ -27,7 +27,7 @@
             background-color: #f3eed8;
             background-image: url("https://www.transparenttextures.com/patterns/aged-paper.png");
             color: var(--wood-dark);
-            overflow: hidden;
+            overflow: hidden; /* 確保主頁面不滾動 */
             height: 100vh;
             width: 100vw;
             margin: 0;
@@ -94,32 +94,37 @@
             align-items: center;
         }
 
-        /* === 故事劇場佈局 === */
+        /* === 故事劇場佈局 (修正 1) === */
         
         .full-text-area {
             position: absolute;
-            top: 80px;
+            top: 96px; /* 導覽列高度 */
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: #fffbf0;
-            padding: 40px;
-            padding-bottom: 300px;
-            overflow-y: auto;
+            background-color: #f3eed8; /* 設為背景色 */
+            padding: 20px 40px; /* 縮減上下 padding */
+            overflow: hidden; /* 關鍵：防止捲動 */
             z-index: 1;
-            scrollbar-width: thin;
-            scrollbar-color: #8d6e63 #fffbf0;
         }
 
         .text-content {
-            max-width: 1400px;
+            max-width: 1200px; /* 縮小寬度，讓內容更集中 */
             margin: 0 auto;
             background: white;
-            padding: 50px;
+            padding: 40px; /* 縮減內 padding */
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             border: 1px solid #e0e0e0;
             position: relative;
+            overflow-y: hidden; /* 再次確保內容區域不滾動 */
+        }
+        
+        /* 故事內文區塊高度 (確保單頁顯示) */
+        .story-text-container {
+            max-height: 480px; /* 預計在 1080p 螢幕上的最大高度 */
+            overflow: hidden;
+            padding-bottom: 20px;
         }
 
         .interaction-layer {
@@ -127,25 +132,24 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 280px;
+            height: 200px; /* 總互動區域高度 */
             z-index: 10;
             pointer-events: none;
             display: flex;
             justify-content: center;
             align-items: flex-end;
-            padding-bottom: 30px;
+            padding-bottom: 20px;
         }
 
-        /* === 圓形頭像樣式 === */
+        /* === 圓形頭像樣式 (修正 2-1: 縮小) === */
         .avatar-frame {
-            width: 180px;
-            height: 180px;
+            width: 120px; /* 從 180px 縮小 */
+            height: 120px;
             border-radius: 50%;
-            border: 6px solid #d4af37;
+            border: 5px solid #d4af37; /* 金框縮小 */
             box-shadow: 
-                0 0 0 4px #5d4037,
-                0 10px 20px rgba(0,0,0,0.5),
-                inset 0 0 20px rgba(0,0,0,0.3);
+                0 0 0 3px #5d4037, /* 外圈木色縮小 */
+                0 6px 15px rgba(0,0,0,0.4);
             overflow: hidden;
             background: #fff8e1;
             position: relative;
@@ -154,16 +158,16 @@
         }
 
         .avatar-frame.speaking {
-            transform: scale(1.15) translateY(-10px);
+            transform: scale(1.1) translateY(-5px); /* 縮小動畫幅度 */
             border-color: #ffb300;
             box-shadow: 
-                0 0 0 4px #5d4037,
-                0 0 30px rgba(255, 179, 0, 0.6);
+                0 0 0 3px #5d4037,
+                0 0 20px rgba(255, 179, 0, 0.6);
         }
 
         .avatar-frame.silent {
-            transform: scale(0.9);
-            filter: grayscale(0.6) brightness(0.7);
+            transform: scale(0.95);
+            filter: grayscale(0.7) brightness(0.7);
             border-color: #8d6e63;
         }
 
@@ -172,51 +176,59 @@
             height: 100%;
         }
 
+        /* 角色位置 (修正 2-2: 靠近對話框) */
         .char-container {
             position: absolute;
-            bottom: 50px; 
+            bottom: 20px; /* 靠近對話框頂部 */
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .char-left { left: 12%; transform: translateX(-50%); }
-        .char-right { right: 12%; transform: translateX(50%); }
+        .char-left { left: 50%; transform: translateX(-450px); } /* 調整位置與對話框對齊 */
+        .char-right { right: 50%; transform: translateX(450px); } /* 調整位置與對話框對齊 */
 
         .name-badge {
-            margin-top: -15px;
+            margin-top: -10px; /* 調整標籤位置 */
             background: #3e2723;
             color: #ffb300;
-            padding: 6px 20px;
+            padding: 4px 16px;
             border-radius: 20px;
             font-weight: bold;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             border: 2px solid #ffb300;
             z-index: 40;
             position: relative;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.3);
         }
 
+        /* 對話框 (修正 2-3: 縮短長度和位置) */
         .dialogue-box {
-            width: 60%;
-            min-width: 800px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 5px solid #3e2723;
-            border-radius: 24px;
-            padding: 30px 45px;
-            margin-bottom: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 50%; /* 縮小寬度 */
+            min-width: 650px; /* 最小寬度修正 */
+            background: rgba(255, 255, 255, 0.98);
+            border: 4px solid #3e2723;
+            border-radius: 20px;
+            padding: 20px 30px; 
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
             pointer-events: auto;
             position: relative;
             z-index: 25;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            min-height: 160px;
+            min-height: 120px; /* 最小高度調整 */
+            bottom: -50px; /* 將對話框從底部彈出 */
         }
 
+        .dialogue-box .text-3xl {
+            font-size: 2rem; /* 確保對話文字大小為 3xl */
+        }
+        
         .typewriter::after { content: '|'; animation: blink 1s step-start infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
+        /* 練習題卡片 */
         .practice-card {
             background-color: white;
             border: 4px solid #8d6e63;
@@ -246,7 +258,7 @@
         const { useState, useEffect, useRef } = React;
 
         // -----------------------
-        // 自定義 SVG 角色組件 (解決圖片路徑問題)
+        // 自定義 SVG 角色組件 (確保圖片顯示)
         // -----------------------
         const GuanAvatar = () => (
             // 嚴肅藍衣官員
@@ -523,54 +535,59 @@
                 return (
                     <div className="story-container fade-in relative h-[calc(100vh-96px)]">
                         
-                        {/* 1. 課文卷軸閱讀區 */}
+                        {/* 1. 課文閱讀區 (修正 1) */}
                         <div className="full-text-area">
                             <div className="text-content">
                                 <button 
                                     onClick={() => setSelectedChapter(null)}
-                                    className="mb-8 inline-block btn-wood px-8 py-3 rounded-lg font-bold text-xl"
+                                    className="mb-6 inline-block btn-wood px-8 py-3 rounded-lg font-bold text-xl"
                                 >
                                     ⬅ 返回選單
                                 </button>
-                                <h2 className="text-6xl font-bold text-amber-900 mb-10 text-center border-b-4 border-double border-amber-200 pb-6">{chapter.title}</h2>
-                                <p className="text-4xl leading-[2.5] text-gray-900 text-justify font-bold whitespace-pre-line px-8 tracking-wider">
-                                    {chapter.content}
-                                </p>
+                                <h2 className="text-5xl font-bold text-amber-900 mb-6 text-center border-b-4 border-double border-amber-200 pb-4">{chapter.title}</h2>
+                                <div className="story-text-container">
+                                    <p className="text-3xl leading-[2.2] text-gray-900 text-justify font-bold whitespace-pre-line px-4 tracking-wider">
+                                        {chapter.content}
+                                    </p>
+                                </div>
                             </div>
                         </div>
 
-                        {/* 2. 底部互動層 */}
-                        <div className="interaction-layer">
+                        {/* 2. 底部互動層 (修正 2) */}
+                        <div className="interaction-layer flex-col justify-end items-center w-full">
                             
-                            {/* 左側角色: 管仲 */}
-                            <div className="char-container char-left">
-                                <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
-                                    <GuanAvatar />
-                                </div>
-                                <div className="name-badge">管仲</div>
-                            </div>
-
                             {/* 中間對話框 */}
-                            <div className="dialogue-box">
-                                <div className="text-3xl font-bold text-amber-800 mb-2 border-b border-amber-200 pb-1 inline-block w-fit">
-                                    {currentLine.speaker} 說：
+                            <div className="dialogue-box relative z-25 flex items-center justify-center">
+                                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full flex gap-12">
+                                    {/* 左側角色: 管仲 */}
+                                    <div className="char-container flex-col items-center">
+                                        <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
+                                            <GuanAvatar />
+                                        </div>
+                                        <div className="name-badge">管仲</div>
+                                    </div>
+                                    
+                                    {/* 右側角色: 鮑叔牙 */}
+                                    <div className="char-container flex-col items-center">
+                                        <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
+                                            <BaoAvatar />
+                                        </div>
+                                        <div className="name-badge">鮑叔牙</div>
+                                    </div>
                                 </div>
-                                {/* 關鍵修正：對話文字從 text-4xl 縮小到 text-3xl */}
-                                <div className="text-3xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
-                                    {currentLine.text}
+                                
+                                <div className="w-full">
+                                    <div className="text-2xl font-bold text-amber-800 mb-2 border-b border-amber-200 pb-1 inline-block w-fit">
+                                        {currentLine.speaker} 說：
+                                    </div>
+                                    {/* 關鍵修正：對話文字從 text-4xl 縮小到 text-3xl */}
+                                    <div className="text-3xl font-bold text-gray-800 typewriter leading-relaxed mt-2">
+                                        {currentLine.text}
+                                    </div>
                                 </div>
-                            </div>
-
-                            {/* 右側角色: 鮑叔牙 */}
-                            <div className="char-container char-right">
-                                <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
-                                    <BaoAvatar />
-                                </div>
-                                <div className="name-badge">鮑叔牙</div>
                             </div>
 
                         </div>
-
                     </div>
                 );
             };
