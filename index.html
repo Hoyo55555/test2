@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管鮑之交</title>
+    <title>管鮑之交：RPG 歷史劇場版 (SVG頭像版)</title>
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -151,8 +151,6 @@
             position: relative;
             z-index: 30;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            /* 移除點擊手勢 */
-            cursor: default;
         }
 
         .avatar-frame.speaking {
@@ -169,11 +167,9 @@
             border-color: #8d6e63;
         }
 
-        .avatar-img {
+        .avatar-svg {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            object-position: top center;
         }
 
         .char-container {
@@ -248,6 +244,83 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
+
+        // -----------------------
+        // 自定義 SVG 角色組件 (解決圖片路徑問題)
+        // -----------------------
+        const GuanAvatar = () => (
+            <svg viewBox="0 0 200 200" className="avatar-svg">
+                <defs>
+                    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fde0c4" />
+                        <stop offset="100%" stopColor="#f5cba7" />
+                    </linearGradient>
+                    <linearGradient id="clothBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#4299e1" />
+                        <stop offset="100%" stopColor="#2b6cb0" />
+                    </linearGradient>
+                </defs>
+                {/* 背景 */}
+                <circle cx="100" cy="100" r="100" fill="#ebf8ff" />
+                {/* 身體/衣服 */}
+                <path d="M40 200 Q100 160 160 200 L160 200 L40 200 Z" fill="url(#clothBlue)" />
+                <path d="M40 200 Q100 160 160 200" fill="none" stroke="#2c5282" strokeWidth="4" />
+                {/* 領口 */}
+                <path d="M85 180 L100 200 L115 180" fill="#fff" />
+                {/* 頭部 */}
+                <circle cx="100" cy="110" r="45" fill="url(#skinGrad)" stroke="#d69e2e" strokeWidth="2" />
+                {/* 官帽 */}
+                <path d="M70 90 L130 90 L125 50 L75 50 Z" fill="#2d3748" />
+                <rect x="60" y="85" width="80" height="15" rx="5" fill="#1a202c" />
+                <circle cx="100" cy="70" r="5" fill="#f6e05e" />
+                {/* 帽翅 */}
+                <path d="M60 90 L30 80 M140 90 L170 80" stroke="#1a202c" strokeWidth="6" strokeLinecap="round" />
+                {/* 五官 (嚴肅) */}
+                <path d="M85 115 Q100 110 115 115" fill="none" stroke="#718096" strokeWidth="2" />
+                <circle cx="85" cy="105" r="3" fill="#2d3748" />
+                <circle cx="115" cy="105" r="3" fill="#2d3748" />
+                <path d="M80 98 L95 95 M120 98 L105 95" stroke="#2d3748" strokeWidth="2" />
+                {/* 鬍子 */}
+                <path d="M95 125 L100 140 L105 125" fill="#2d3748" />
+            </svg>
+        );
+
+        const BaoAvatar = () => (
+            <svg viewBox="0 0 200 200" className="avatar-svg">
+                <defs>
+                    <linearGradient id="skinGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#ffe4cc" />
+                        <stop offset="100%" stopColor="#f0c294" />
+                    </linearGradient>
+                    <linearGradient id="clothBrown" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#d69e2e" />
+                        <stop offset="100%" stopColor="#975a16" />
+                    </linearGradient>
+                </defs>
+                {/* 背景 */}
+                <circle cx="100" cy="100" r="100" fill="#fffff0" />
+                {/* 身體/衣服 */}
+                <path d="M40 200 Q100 160 160 200 L160 200 L40 200 Z" fill="url(#clothBrown)" />
+                <path d="M40 200 Q100 160 160 200" fill="none" stroke="#744210" strokeWidth="4" />
+                {/* 領口 */}
+                <path d="M85 180 L100 200 L115 180" fill="#fff" />
+                {/* 頭部 */}
+                <circle cx="100" cy="110" r="45" fill="url(#skinGrad2)" stroke="#b7791f" strokeWidth="2" />
+                {/* 官帽 */}
+                <path d="M75 90 L125 90 L120 55 L80 55 Z" fill="#2d3748" />
+                <rect x="65" y="85" width="70" height="15" rx="5" fill="#1a202c" />
+                <circle cx="100" cy="75" r="5" fill="#63b3ed" />
+                {/* 帽翅 (下垂表示溫和) */}
+                <path d="M65 92 Q40 100 30 95 M135 92 Q160 100 170 95" stroke="#1a202c" strokeWidth="5" strokeLinecap="round" />
+                {/* 五官 (溫和微笑) */}
+                <path d="M90 120 Q100 125 110 120" fill="none" stroke="#718096" strokeWidth="2" />
+                <circle cx="85" cy="105" r="3" fill="#2d3748" />
+                <circle cx="115" cy="105" r="3" fill="#2d3748" />
+                <path d="M80 95 Q90 90 95 95 M120 95 Q110 90 105 95" stroke="#2d3748" strokeWidth="1.5" />
+                {/* 鬍子 */}
+                <path d="M98 128 Q100 135 102 128" fill="none" stroke="#2d3748" strokeWidth="1" />
+            </svg>
+        );
 
         // -----------------------
         // 故事資料
@@ -356,11 +429,6 @@
             const [dialogueStep, setDialogueStep] = useState(0);
             const [answers, setAnswers] = useState({});
             const [showRef, setShowRef] = useState({});
-
-            // 直接指定圖片路徑 (已處理特殊字元)
-            const imgGuan = "./guan.jpg";
-            // 對於含有空格和括號的檔名，使用 encodeURIComponent 確保安全，或是直接對空格使用 %20
-            const imgBao = "./boo.jpg";
 
             useEffect(() => {
                 let timer;
@@ -475,12 +543,7 @@
                             {/* 左側角色: 管仲 */}
                             <div className="char-container char-left">
                                 <div className={`avatar-frame ${isGuanSpeaking ? 'speaking' : 'silent'}`}>
-                                    <img 
-                                        src={imgGuan} 
-                                        className="avatar-img"
-                                        alt="管仲" 
-                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=圖片讀取失敗"; }} 
-                                    />
+                                    <GuanAvatar />
                                 </div>
                                 <div className="name-badge">管仲</div>
                             </div>
@@ -498,12 +561,7 @@
                             {/* 右側角色: 鮑叔牙 */}
                             <div className="char-container char-right">
                                 <div className={`avatar-frame ${isBaoSpeaking ? 'speaking' : 'silent'}`}>
-                                    <img 
-                                        src={imgBao} 
-                                        className="avatar-img"
-                                        alt="鮑叔牙" 
-                                        onError={(e) => { e.target.src = "https://placehold.co/200x200?text=圖片讀取失敗"; }} 
-                                    />
+                                    <BaoAvatar />
                                 </div>
                                 <div className="name-badge">鮑叔牙</div>
                             </div>
