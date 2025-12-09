@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管鮑之交：RPG 歷史劇場版 (SVG頭像版)</title>
+    <title>管鮑之交</title>
     <!-- React & ReactDOM -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <!-- Babel -->
+    <!-- Babel: Used to interpret JSX inside the <script type="text/babel"> tag -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -249,6 +249,7 @@
         // 自定義 SVG 角色組件 (解決圖片路徑問題)
         // -----------------------
         const GuanAvatar = () => (
+            // 嚴肅藍衣官員
             <svg viewBox="0 0 200 200" className="avatar-svg">
                 <defs>
                     <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -286,6 +287,7 @@
         );
 
         const BaoAvatar = () => (
+            // 溫和棕色官員
             <svg viewBox="0 0 200 200" className="avatar-svg">
                 <defs>
                     <linearGradient id="skinGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
